@@ -19,10 +19,7 @@
     {"key": "push_agent", "name": "🎯推送┃磁力", "type": 3, "api": "csp_PushAgent", "searchable": 0, "quickSearch": 0}
   ],
   "parses": [
-    {"name": "聚合", "type": 3, "url": "Demo"},
-    {"name": "3线", "type": 1, "url": "https://jx.777jiexi.com/player/?url="},
-    {"name": "2线", "type": 1, "url": "https://jx.jsonplayer.com/player/?url="},
-    {"name": "1线", "type": 0, "url": "https://www.yemu.xyz/?url="}
+    {"name": "线路1", "type": 1, "url": "https://jx.aidouer.net/?url="}
   ],
   "flags": ["youku","qq","iqiyi","qiyi","letv","sohu","tudou","pptv","mgtv","wasu","bilibili","renrenmi"],
   "lives": [
