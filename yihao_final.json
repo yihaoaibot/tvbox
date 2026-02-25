@@ -370,7 +370,7 @@
       "quickSearch": 0,
       "changeable": 0,
       "ext": {
-        "json": "lib/5af5fbe12a88b7c45aa1c21e6551826c.txt"
+        "json": "./lib/5af5fbe12a88b7c45aa1c21e6551826c.txt"
       }
     },
     {
@@ -403,8 +403,8 @@
       "key": "虎牙js",
       "name": "🐯虎牙┃直播",
       "type": 3,
-      "api": "lib/drpy2.min.js",
-      "ext": "lib/虎牙.js",
+      "api": "./lib/drpy2.min.js",
+      "ext": "./lib/虎牙.js",
       "style": {
         "type": "rect",
         "ratio": 1.755
@@ -419,7 +419,7 @@
       "key": "斗鱼js",
       "name": "🐟斗鱼┃直播",
       "type": 3,
-      "api": "lib/drpy2.min.js",
+      "api": "./lib/drpy2.min.js",
       "ext": "https://git.yylx.win/https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/斗鱼直播.js",
       "style": {
         "type": "rect",
@@ -516,7 +516,7 @@
       "quickSearch": 0,
       "changeable": 0,
       "ext": {
-        "json": "lib/0075389dca9afadd4614e9713765ff17.txt"
+        "json": "./lib/0075389dca9afadd4614e9713765ff17.txt"
       }
     },
     {
@@ -532,14 +532,14 @@
       "quickSearch": 0,
       "changeable": 0,
       "ext": {
-        "json": "lib/6496356286589c68f52c2f99c0c674c7.txt"
+        "json": "./lib/6496356286589c68f52c2f99c0c674c7.txt"
       }
     },
     {
       "key": "dr_兔小贝",
       "name": "📚儿童┃启蒙",
       "type": 3,
-      "api": "lib/drpy2.min.js",
+      "api": "./lib/drpy2.min.js",
       "ext": "https://git.yylx.win/https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/%E5%85%94%E5%B0%8F%E8%B4%9D.js",
       "style": {
         "type": "rect",
@@ -562,7 +562,7 @@
       "quickSearch": 0,
       "changeable": 0,
       "ext": {
-        "json": "lib/89370c8ddf36b5e1beb4d71adb921bda.txt"
+        "json": "./lib/89370c8ddf36b5e1beb4d71adb921bda.txt"
       }
     },
     {
@@ -578,7 +578,7 @@
       "quickSearch": 0,
       "changeable": 0,
       "ext": {
-        "json": "lib/d7a21cf34ede56f5c686ecfba5fc7e3f.txt"
+        "json": "./lib/d7a21cf34ede56f5c686ecfba5fc7e3f.txt"
       }
     },
     {
@@ -594,7 +594,7 @@
       "quickSearch": 0,
       "changeable": 0,
       "ext": {
-        "json": "lib/8f55d520f8d70056695740ef151744a7.txt"
+        "json": "./lib/8f55d520f8d70056695740ef151744a7.txt"
       }
     },
     {
@@ -610,7 +610,7 @@
       "quickSearch": 0,
       "changeable": 0,
       "ext": {
-        "json": "lib/c66a4b5356141c49fd45ec51568017b4.txt"
+        "json": "./lib/c66a4b5356141c49fd45ec51568017b4.txt"
       }
     },
     {
@@ -681,7 +681,7 @@
     {
       "name": "范明明（需开启V6网络）",
       "type": 0,
-      "url": "lib/3d75a78a0fc7ede372c03598d6d10367.m3u",
+      "url": "./lib/3d75a78a0fc7ede372c03598d6d10367.m3u",
       "playerType": 2
     },
     {
