@@ -647,6 +647,116 @@
       "type": 3,
       "api": "csp_蜂鸟影视",
       "ext": "https://www.fengniao.tv"
+    },
+    {
+      "key": "采集站通用",
+      "name": "🔧采集站通用┃API",
+      "type": 3,
+      "api": "csp_采集站通用",
+      "ext": ""
+    },
+    {
+      "key": "采集站无分类",
+      "name": "🔧采集站无分类┃API",
+      "type": 3,
+      "api": "csp_采集站无分类",
+      "ext": ""
+    },
+    {
+      "key": "蜂蜜资源",
+      "name": "🍯蜂蜜资源┃采集",
+      "type": 3,
+      "api": "csp_蜂蜜资源",
+      "ext": "https://www.fengmiyuan.com"
+    },
+    {
+      "key": "樱花资源",
+      "name": "🌸樱花资源┃采集",
+      "type": 3,
+      "api": "csp_樱花资源",
+      "ext": "https://www.yhzy.cc"
+    },
+    {
+      "key": "章鱼资源",
+      "name": "🐙章鱼资源┃采集",
+      "type": 3,
+      "api": "csp_章鱼资源",
+      "ext": "https://www.zhangyuwang.com"
+    },
+    {
+      "key": "两个BT",
+      "name": "🔍两个BT┃BT搜索",
+      "type": 3,
+      "api": "csp_两个BT",
+      "ext": "https://www.bttwoo.com"
+    },
+    {
+      "key": "蓝光影院",
+      "name": "💿蓝光影院┃新建",
+      "type": 3,
+      "api": "csp_蓝光影院",
+      "ext": "https://www.lgyy.tv"
+    },
+    {
+      "key": "4K影院",
+      "name": "🎬4K影院┃新建",
+      "type": 3,
+      "api": "csp_4K影院",
+      "ext": "https://www.4kyy.cn"
+    },
+    {
+      "key": "非凡采集",
+      "name": "🎬非凡┃验证可用",
+      "type": 1,
+      "api": "http://cj.ffzyapi.com/api.php/provide/vod/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
+      "key": "卧龙采集",
+      "name": "🎬卧龙┃验证可用",
+      "type": 1,
+      "api": "https://collect.wolongzyw.com/api.php/provide/vod/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
+      "key": "360采集",
+      "name": "🎬360┃验证可用",
+      "type": 1,
+      "api": "https://360zy.net/api.php/provide/vod/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
+      "key": "无尽采集",
+      "name": "🎬无尽┃验证可用",
+      "type": 1,
+      "api": "https://api.wujinapi.me/api.php/provide/vod/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
+      "key": "暴风采集",
+      "name": "🎬暴风┃验证可用",
+      "type": 1,
+      "api": "https://bfzyapi.com/api.php/provide/vod/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
+      "key": "爱坤采集",
+      "name": "🐔爱坤┃验证可用",
+      "type": 1,
+      "api": "https://ikunzyapi.com/api.php/provide/vod/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
     }
   ],
   "logo": "https://bdcache1-f1.v3mh.com/image/25-12-16/6941612717007.gif",
