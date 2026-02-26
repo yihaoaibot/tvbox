@@ -3,405 +3,341 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>小学生玩手机 - 简洁版</title>
+    <title>小学生玩手机</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { width: 100%; height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'Segoe SC', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: #fff; }
-        
-        .presentation { width: 100%; height: 100%; position: relative; overflow: hidden; }
-        
-        .slide {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; flex-direction: column; justify-content: center;
-            padding: clamp(30px, 6vw, 60px);
-            opacity: 0; transform: translateY(30px); transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            background: #fff;
-        }
-        .slide.active { opacity: 1; transform: translateY(0); }
-        .slide.prev { opacity: 0; transform: translateY(-30px); }
+        html, body { width: 100%; height: 100%; overflow: hidden; font-family: -apple-system, sans-serif; background: #fff; }
+        .p { width: 100%; height: 100%; position: relative; overflow: hidden; }
+        .s { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: clamp(24px, 5vw, 50px); opacity: 0; transform: translateY(40px); transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); background: #fff; }
+        .s.active { opacity: 1; transform: translateY(0); }
         
         /* 封面 */
-        .slide-cover { text-align: center; }
-        .slide-cover .icon { font-size: clamp(60px, 12vw, 120px); margin-bottom: 20px; }
-        .slide-cover h1 { font-size: clamp(32px, 8vw, 80px); font-weight: 700; letter-spacing: -2px; line-height: 1.1; margin-bottom: 16px; }
-        .slide-cover .subtitle { font-size: clamp(16px, 3.5vw, 28px); color: #FF6700; font-weight: 600; }
+        .cover .ico { font-size: clamp(70px, 15vw, 140px); margin-bottom: 24px; }
+        .cover h1 { font-size: clamp(38px, 9vw, 88px); font-weight: 700; letter-spacing: -2px; margin-bottom: 16px; }
+        .cover .sub { font-size: clamp(18px, 4vw, 32px); color: #FF6700; font-weight: 600; }
         
-        /* 大标题页 */
-        .slide-hero { text-align: center; }
-        .slide-hero .img { width: 100%; max-width: 500px; height: clamp(200px, 35vw, 400px); object-fit: cover; border-radius: clamp(16px, 3vw, 36px); margin: 0 auto clamp(30px, 6vw, 50px); background: #f5f5f7; }
-        .slide-hero h2 { font-size: clamp(36px, 8vw, 72px); font-weight: 700; letter-spacing: -1px; }
-        .slide-hero .accent { color: #FF6700; }
+        /* 大数字 */
+        .nums { display: flex; gap: clamp(20px, 5vw, 60px); flex-wrap: wrap; justify-content: center; }
+        .num { text-align: center; min-width: clamp(150px, 25vw, 240px); }
+        .num .v { font-size: clamp(56px, 13vw, 120px); font-weight: 700; line-height: 1; }
+        .num .v.o { color: #FF6700; }
+        .num .v.r { color: #EA4335; }
+        .num .v.b { color: #1A73E8; }
+        .num .t { font-size: clamp(14px, 3vw, 22px); color: #666; margin-top: 12px; }
         
-        /* 数据大数字 */
-        .stats-row { display: flex; justify-content: center; flex-wrap: wrap; gap: clamp(20px, 5vw, 60px); max-width: 1200px; margin: 0 auto; }
-        .stat-item { text-align: center; min-width: clamp(140px, 22vw, 220px); }
-        .stat-item .number { font-size: clamp(48px, 11vw, 96px); font-weight: 700; line-height: 1; }
-        .stat-item .number.orange { color: #FF6700; }
-        .stat-item .number.red { color: #EA4335; }
-        .stat-item .number.blue { color: #1A73E8; }
-        .stat-item .number.green { color: #34A853; }
-        .stat-item .label { font-size: clamp(13px, 3vw, 20px); color: #666; margin-top: 10px; }
+        /* 图标网格 */
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(14px, 3vw, 28px); max-width: 900px; width: 100%; }
+        .g-item { background: #F5F5F7; border-radius: clamp(16px, 3.5vw, 32px); padding: clamp(20px, 4vw, 36px); text-align: center; transition: 0.3s; }
+        .g-item:hover { transform: scale(1.04); box-shadow: 0 16px 48px rgba(0,0,0,0.1); }
+        .g-item .i { font-size: clamp(48px, 10vw, 76px); margin-bottom: 12px; }
+        .g-item .t { font-size: clamp(16px, 3.5vw, 24px); font-weight: 600; }
+        .g-item.g .t { color: #34A853; }
+        .g-item.r .t { color: #EA4335; }
         
-        /* 4宫格 */
-        .grid-4 { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(16px, 3vw, 30px); max-width: 1000px; margin: 0 auto; width: 100%; }
-        .grid-item { background: #F5F5F7; border-radius: clamp(16px, 3vw, 28px); padding: clamp(20px, 4vw, 36px); text-align: center; transition: 0.3s; }
-        .grid-item:hover { transform: scale(1.03); box-shadow: 0 12px 40px rgba(0,0,0,0.1); }
-        .grid-item .icon { font-size: clamp(40px, 8vw, 64px); margin-bottom: 16px; }
-        .grid-item h3 { font-size: clamp(18px, 4vw, 28px); font-weight: 600; margin-bottom: 8px; }
-        .grid-item.green h3 { color: #34A853; }
-        .grid-item.red h3 { color: #EA4335; }
-        .grid-item p { font-size: clamp(14px, 3vw, 18px); color: #666; line-height: 1.5; }
+        /* 对比 */
+        .comp { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 4vw, 50px); max-width: 1000px; width: 100%; }
+        .c-card { background: linear-gradient(135deg, #F5F5F7, #fff); border-radius: clamp(20px, 4vw, 40px); padding: clamp(28px, 5vw, 50px); text-align: center; border: 4px solid; }
+        .c-card.bad { border-color: #EA4335; }
+        .c-card.good { border-color: #34A853; }
+        .c-card .i { font-size: clamp(52px, 11vw, 88px); margin-bottom: 16px; }
+        .c-card .h { font-size: clamp(20px, 4.5vw, 32px); font-weight: 600; margin-bottom: 20px; }
+        .c-card.bad .h { color: #EA4335; }
+        .c-card.good .h { color: #34A853; }
+        .c-card .case { background: #fff; border-radius: clamp(14px, 3vw, 24px); padding: clamp(16px, 3vw, 28px); text-align: left; margin-top: 12px; }
+        .c-card .case .n { font-size: clamp(14px, 3vw, 18px); font-weight: 600; margin-bottom: 6px; }
+        .c-card .case .d { font-size: clamp(12px, 2.5vw, 15px); color: #666; }
         
-        /* 对比卡 */
-        .compare-row { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 4vw, 50px); max-width: 1100px; margin: 0 auto; width: 100%; }
-        .compare-card { background: linear-gradient(135deg, #F5F5F7, #fff); border-radius: clamp(20px, 4vw, 36px); padding: clamp(30px, 5vw, 50px); text-align: center; border: 3px solid; }
-        .compare-card.bad { border-color: #EA4335; }
-        .compare-card.good { border-color: #34A853; }
-        .compare-card .icon { font-size: clamp(48px, 10vw, 80px); margin-bottom: 20px; }
-        .compare-card h3 { font-size: clamp(20px, 4.5vw, 32px); font-weight: 600; margin-bottom: 20px; }
-        .compare-card.bad h3 { color: #EA4335; }
-        .compare-card.good h3 { color: #34A853; }
-        .compare-card .case { background: #fff; border-radius: clamp(12px, 2.5vw, 20px); padding: clamp(16px, 3vw, 24px); margin-top: 16px; text-align: left; }
-        .compare-card .case h4 { font-size: clamp(15px, 3vw, 20px); margin-bottom: 8px; }
-        .compare-card .case p { font-size: clamp(13px, 2.5vw, 16px); color: #666; margin-bottom: 8px; }
-        .compare-card .case .tag { font-size: clamp(12px, 2vw, 14px); padding: 6px 12px; background: #F5F5F7; border-radius: 8px; display: inline-block; }
+        /* 3列 */
+        .col3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(14px, 3vw, 28px); max-width: 1000px; width: 100%; }
+        .col-card { background: #fff; border-radius: clamp(16px, 3.5vw, 32px); padding: clamp(24px, 4vw, 40px); text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.06); transition: 0.3s; }
+        .col-card:hover { transform: translateY(-12px); box-shadow: 0 16px 48px rgba(0,0,0,0.12); }
+        .col-card .i { font-size: clamp(52px, 11vw, 80px); margin-bottom: 16px; }
+        .col-card .h { font-size: clamp(18px, 4vw, 26px); font-weight: 600; color: #FF6700; margin-bottom: 20px; }
+        .col-card .l { list-style: none; text-align: left; }
+        .col-card .l li { font-size: clamp(13px, 3vw, 17px); padding: 8px 0; color: #444; padding-left: 22px; position: relative; }
+        .col-card .l li::before { content: '✓'; position: absolute; left: 0; color: #34A853; }
         
-        /* 三列引导 */
-        .guide-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 3vw, 30px); max-width: 1100px; margin: 0 auto; width: 100%; }
-        .guide-card { background: #fff; border-radius: clamp(16px, 3vw, 28px); padding: clamp(24px, 4vw, 40px) clamp(20px, 3.5vw, 30px); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.06); transition: 0.3s; }
-        .guide-card:hover { transform: translateY(-10px); box-shadow: 0 16px 50px rgba(0,0,0,0.12); }
-        .guide-card .icon { font-size: clamp(48px, 10vw, 72px); margin-bottom: 20px; }
-        .guide-card h3 { font-size: clamp(18px, 4vw, 26px); font-weight: 600; color: #FF6700; margin-bottom: 20px; }
-        .guide-card ul { list-style: none; text-align: left; }
-        .guide-card li { font-size: clamp(14px, 3vw, 18px); padding: clamp(8px, 1.5vw, 12px) 0; color: #444; border-bottom: 1px solid #f0f0f0; padding-left: 24px; position: relative; }
-        .guide-card li:last-child { border-bottom: none; }
-        .guide-card li::before { content: '✓'; position: absolute; left: 0; color: #34A853; font-weight: bold; }
+        /* 时间线 */
+        .time { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(24px, 5vw, 60px); max-width: 1000px; }
+        .time-item { text-align: center; min-width: clamp(140px, 22vw, 200px); }
+        .time-item .a { font-size: clamp(14px, 3vw, 18px); color: #999; margin-bottom: 6px; }
+        .time-item .h { font-size: clamp(28px, 6vw, 48px); font-weight: 700; color: #34A853; }
+        .time-item .n { font-size: clamp(12px, 2.5vw, 16px); color: #666; margin-top: 6px; }
         
-        /* 时间线简洁版 */
-        .timeline-4 { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(20px, 4vw, 50px); max-width: 1100px; margin: 0 auto; }
-        .time-item { text-align: center; min-width: clamp(160px, 25vw, 220px); }
-        .time-item .age { font-size: clamp(16px, 3.5vw, 22px); font-weight: 600; color: #999; margin-bottom: 8px; }
-        .time-item .hours { font-size: clamp(28px, 6vw, 42px); font-weight: 700; color: #34A853; }
-        .time-item .note { font-size: clamp(12px, 2.5vw, 16px); color: #666; margin-top: 8px; }
+        /* 行动 */
+        .acts { display: flex; flex-direction: column; gap: clamp(14px, 3vw, 24px); max-width: 700px; width: 100%; }
+        .act { display: flex; align-items: center; gap: clamp(16px, 3.5vw, 28px); padding: clamp(20px, 4vw, 32px); background: #F5F5F7; border-radius: clamp(16px, 3.5vw, 28px); transition: 0.3s; }
+        .act:hover { background: #fff; box-shadow: 0 12px 40px rgba(0,0,0,0.1); transform: translateX(12px); }
+        .act .n { width: clamp(44px, 8vw, 64px); height: clamp(44px, 8vw, 64px); background: linear-gradient(135deg, #FF6700, #FF9A3C); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: clamp(18px, 4vw, 28px); font-weight: 700; flex-shrink: 0; }
+        .act .t { font-size: clamp(16px, 3.5vw, 24px); font-weight: 500; }
         
-        /* 行动列表简洁 */
-        .action-row { display: flex; flex-direction: column; gap: clamp(16px, 3vw, 28px); max-width: 800px; margin: 0 auto; width: 100%; }
-        .action-row .item { display: flex; align-items: center; gap: clamp(16px, 3vw, 24px); padding: clamp(20px, 4vw, 28px); background: #F5F5F7; border-radius: clamp(16px, 3.5vw, 24px); transition: 0.3s; }
-        .action-row .item:hover { background: #fff; box-shadow: 0 8px 30px rgba(0,0,0,0.1); transform: translateX(10px); }
-        .action-row .num { width: clamp(44px, 8vw, 60px); height: clamp(44px, 8vw, 60px); background: linear-gradient(135deg, #FF6700, #FF9A3C); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: clamp(18px, 4vw, 26px); font-weight: 700; flex-shrink: 0; }
-        .action-row .text { font-size: clamp(16px, 3.5vw, 22px); font-weight: 500; }
-        
-        /* 总结页 */
-        .slide-summary { text-align: center; }
-        .slide-summary .icon { font-size: clamp(60px, 12vw, 100px); margin-bottom: 30px; }
-        .slide-summary h2 { font-size: clamp(32px, 7vw, 64px); font-weight: 700; letter-spacing: -1px; line-height: 1.3; margin-bottom: 30px; }
-        .slide-summary .highlight { color: #FF6700; }
-        .slide-summary .sub { font-size: clamp(20px, 4.5vw, 36px); color: #34A853; font-weight: 600; margin-top: 20px; }
+        /* 总结 */
+        .end .i { font-size: clamp(70px, 15vw, 120px); margin-bottom: 24px; }
+        .end h2 { font-size: clamp(36px, 9vw, 84px); font-weight: 700; letter-spacing: -1px; margin-bottom: 20px; }
+        .end .hl { color: #FF6700; }
+        .end .sub { font-size: clamp(22px, 5vw, 40px); color: #34A853; font-weight: 600; }
         
         /* 导航 */
-        .nav-dots { position: fixed; right: clamp(14px, 3vw, 24px); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: clamp(10px, 2vw, 14px); z-index: 100; }
-        .nav-dot { width: clamp(8px, 1.8vw, 12px); height: clamp(8px, 1.8vw, 12px); background: #ddd; border-radius: 50%; cursor: pointer; transition: 0.3s; }
-        .nav-dot.active { background: #FF6700; transform: scale(1.3); }
-        
-        .progress-bar { position: fixed; bottom: 0; left: 0; height: 5px; background: linear-gradient(90deg, #FF6700, #FF9A3C); transition: width 0.4s; z-index: 100; }
-        .hint { position: fixed; bottom: clamp(18px, 4vw, 28px); left: 50%; transform: translateX(-50%); font-size: clamp(11px, 2vw, 14px); color: #999; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.8; } }
+        .dots { position: fixed; right: clamp(12px, 2.5vw, 20px); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: clamp(10px, 2vw, 14px); z-index: 100; }
+        .dot { width: clamp(8px, 1.8vw, 12px); height: clamp(8px, 1.8vw, 12px); background: #ddd; border-radius: 50%; cursor: pointer; transition: 0.3s; }
+        .dot.active { background: #FF6700; transform: scale(1.3); }
+        .bar { position: fixed; bottom: 0; left: 0; height: 5px; background: linear-gradient(90deg, #FF6700, #FF9A3C); transition: width 0.4s; z-index: 100; }
+        .hint { position: fixed; bottom: clamp(16px, 3.5vw, 26px); left: 50%; transform: translateX(-50%); font-size: clamp(11px, 2vw, 14px); color: #999; animation: p 2s infinite; }
+        @keyframes p { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.8; } }
         
         @media (max-width: 768px) {
-            .slide { padding: 25px 20px; }
-            .grid-4 { grid-template-columns: 1fr; }
-            .compare-row { grid-template-columns: 1fr; }
-            .guide-3 { grid-template-columns: 1fr; }
-            .nav-dots { right: 10px; gap: 10px; }
+            .s { padding: 20px 16px; }
+            .grid { grid-template-columns: 1fr; }
+            .comp { grid-template-columns: 1fr; }
+            .col3 { grid-template-columns: 1fr; }
+            .dots { right: 10px; gap: 10px; }
         }
-        
         @media (max-height: 500px) and (orientation: landscape) {
-            .slide { padding: 15px 30px; }
-            .stats-row { gap: 15px; }
-            .stat-item { min-width: 100px; }
-            .grid-4 { grid-template-columns: repeat(4, 1fr); gap: 12px; }
-            .guide-3 { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+            .s { padding: 12px 24px; }
+            .nums { gap: 12px; }
+            .num { min-width: 100px; }
+            .grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+            .col3 { grid-template-columns: repeat(3, 1fr); gap: 12px; }
         }
     </style>
 </head>
 <body>
-    <div class="presentation" id="p">
+    <div class="p" id="pp">
         <!-- P1 封面 -->
-        <div class="slide slide-cover active" data-index="0">
-            <div class="icon">📱</div>
+        <div class="s cover active" data-i="0">
+            <div class="ico">📱</div>
             <h1>小学生玩手机</h1>
-            <div class="subtitle">好处与危害</div>
+            <div class="sub">好处与危害</div>
         </div>
         
         <!-- P2 数据 -->
-        <div class="slide" data-index="1">
-            <div class="slide-hero">
-                <h2>数据说话</h2>
-                <div class="stats-row" style="margin-top: clamp(40px, 8vw, 70px);">
-                    <div class="stat-item">
-                        <div class="number orange">>85%</div>
-                        <div class="label">小学生用手机</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="number red">35%+</div>
-                        <div class="label">小学生近视</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="number blue">1.5-2h</div>
-                        <div class="label">日均使用</div>
-                    </div>
+        <div class="s" data-i="1">
+            <div class="nums">
+                <div class="num">
+                    <div class="v o">>85%</div>
+                    <div class="t">小学生用手机</div>
+                </div>
+                <div class="num">
+                    <div class="v r">35%+</div>
+                    <div class="t">小学生近视</div>
+                </div>
+                <div class="num">
+                    <div class="v b">1.5-2h</div>
+                    <div class="t">日均使用</div>
                 </div>
             </div>
         </div>
         
         <!-- P3 好处 -->
-        <div class="slide" data-index="2">
-            <div class="slide-hero">
-                <h2><span class="accent">好处</span>在这里</h2>
-                <img class="img" src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800" alt="学习">
-                <div class="grid-4" style="margin-top: clamp(30px, 6vw, 50px);">
-                    <div class="grid-item green">
-                        <div class="icon">📚</div>
-                        <h3>学习</h3>
-                        <p>资源丰富<br>学习APP<br>视频教程</p>
-                    </div>
-                    <div class="grid-item green">
-                        <div class="icon">💬</div>
-                        <h3>社交</h3>
-                        <p>保持联系<br>团队协作<br>拓展朋友圈</p>
-                    </div>
-                    <div class="grid-item green">
-                        <div class="icon">🧠</div>
-                        <h3>认知</h3>
-                        <p>接触新事物<br>科技素养<br>手眼协调</p>
-                    </div>
-                    <div class="grid-item green">
-                        <div class="icon">🎮</div>
-                        <h3>娱乐</h3>
-                        <p>放松减压<br>培养兴趣<br>智力游戏</p>
-                    </div>
+        <div class="s" data-i="2">
+            <div class="grid">
+                <div class="g-item g">
+                    <div class="i">📚</div>
+                    <div class="t">学习便利</div>
+                </div>
+                <div class="g-item g">
+                    <div class="i">💬</div>
+                    <div class="t">社交沟通</div>
+                </div>
+                <div class="g-item g">
+                    <div class="i">🧠</div>
+                    <div class="t">认知发展</div>
+                </div>
+                <div class="g-item g">
+                    <div class="i">🎮</div>
+                    <div class="t">适度娱乐</div>
                 </div>
             </div>
         </div>
         
         <!-- P4 危害 -->
-        <div class="slide" data-index="3">
-            <div class="slide-hero">
-                <h2>危害<span class="accent">更要注意</span></h2>
-                <img class="img" src="https://images.unsplash.com/photo-1595867366996-8b5b2506d158?w=800" alt="视力">
-                <div class="grid-4" style="margin-top: clamp(30px, 6vw, 50px);">
-                    <div class="grid-item red">
-                        <div class="icon">👁️</div>
-                        <h3>视力</h3>
-                        <p>近视上升<br>眼睛疲劳<br>蓝光伤害</p>
-                    </div>
-                    <div class="grid-item red">
-                        <div class="icon">📉</div>
-                        <h3>学习</h3>
-                        <p>注意力下降<br>作业质量低<br>睡眠不足</p>
-                    </div>
-                    <div class="grid-item red">
-                        <div class="icon">🏃</div>
-                        <h3>运动</h3>
-                        <p>体质下降<br>肥胖风险<br>协调性差</p>
-                    </div>
-                    <div class="grid-item red">
-                        <div class="icon">🧠</div>
-                        <h3>心理</h3>
-                        <p>社交退缩<br>情绪问题<br>成瘾倾向</p>
-                    </div>
+        <div class="s" data-i="3">
+            <div class="grid">
+                <div class="g-item r">
+                    <div class="i">👁️</div>
+                    <div class="t">视力损伤</div>
+                </div>
+                <div class="g-item r">
+                    <div class="i">📉</div>
+                    <div class="t">影响学习</div>
+                </div>
+                <div class="g-item r">
+                    <div class="i">🏃</div>
+                    <div class="t">运动减少</div>
+                </div>
+                <div class="g-item r">
+                    <div class="i">🧠</div>
+                    <div class="t">心理健康</div>
                 </div>
             </div>
         </div>
         
         <!-- P5 案例 -->
-        <div class="slide" data-index="4">
-            <div class="slide-hero">
-                <h2>真实<span class="accent">案例</span></h2>
-                <div class="compare-row" style="margin-top: clamp(30px, 6vw, 50px);">
-                    <div class="compare-card bad">
-                        <div class="icon">⚠️</div>
-                        <h3>反面</h3>
-                        <div class="case">
-                            <h4>小明 - 三年级</h4>
-                            <p>每天3小时手机，半年近视100→300度</p>
-                            <span class="tag">近视警示</span>
-                        </div>
-                        <div class="case" style="margin-top: 12px;">
-                            <h4>小红 - 四年级</h4>
-                            <p>沉迷短视频，成绩下滑30名</p>
-                            <span class="tag">成绩警示</span>
-                        </div>
+        <div class="s" data-i="4">
+            <div class="comp">
+                <div class="c-card bad">
+                    <div class="i">⚠️</div>
+                    <div class="h">反面</div>
+                    <div class="case">
+                        <div class="n">小明 - 三年级</div>
+                        <div class="d">3h手机 → 近视300度</div>
                     </div>
-                    <div class="compare-card good">
-                        <div class="icon">✅</div>
-                        <h3>正面</h3>
-                        <div class="case">
-                            <h4>小刚 - 五年级</h4>
-                            <p>每天30分钟学习APP，成绩稳步提升</p>
-                            <span class="tag" style="background: #E8F5E9;">正面示范</span>
-                        </div>
+                    <div class="case" style="margin-top: 10px;">
+                        <div class="n">小红 - 四年级</div>
+                        <div class="d">沉迷短视频，成绩下滑</div>
+                    </div>
+                </div>
+                <div class="c-card good">
+                    <div class="i">✅</div>
+                    <div class="h">正面</div>
+                    <div class="case">
+                        <div class="n">小刚 - 五年级</div>
+                        <div class="d">30min学习APP，成绩提升</div>
                     </div>
                 </div>
             </div>
         </div>
         
         <!-- P6 引导 -->
-        <div class="slide" data-index="5">
-            <div class="slide-hero">
-                <h2>如何<span class="accent">引导</span></h2>
-                <div class="guide-3" style="margin-top: clamp(30px, 6vw, 50px);">
-                    <div class="guide-card">
-                        <div class="icon">👨‍👩‍👧</div>
-                        <h3>家长</h3>
-                        <ul>
-                            <li>制定使用规则</li>
-                            <li>安装控制软件</li>
-                            <li>以身作则</li>
-                            <li>高质量陪伴</li>
-                        </ul>
-                    </div>
-                    <div class="guide-card">
-                        <div class="icon">🏫</div>
-                        <h3>学校</h3>
-                        <ul>
-                            <li>网络安全教育</li>
-                            <li>无手机课堂</li>
-                            <li>课外活动</li>
-                            <li>家校联动</li>
-                        </ul>
-                    </div>
-                    <div class="guide-card">
-                        <div class="icon">📚</div>
-                        <h3>学生</h3>
-                        <ul>
-                            <li>遵守约定</li>
-                            <li>开启护眼</li>
-                            <li>卸载无关</li>
-                            <li>多运动</li>
-                        </ul>
-                    </div>
+        <div class="s" data-i="5">
+            <div class="col3">
+                <div class="col-card">
+                    <div class="i">👨‍👩‍👧</div>
+                    <div class="h">家长</div>
+                    <ul class="l">
+                        <li>制定规则</li>
+                        <li>控制软件</li>
+                        <li>以身作则</li>
+                    </ul>
+                </div>
+                <div class="col-card">
+                    <div class="i">🏫</div>
+                    <div class="h">学校</div>
+                    <ul class="l">
+                        <li>安全教育</li>
+                        <li>无手机课</li>
+                        <li>课外活动</li>
+                    </ul>
+                </div>
+                <div class="col-card">
+                    <div class="i">📚</div>
+                    <div class="h">学生</div>
+                    <ul class="l">
+                        <li>遵守约定</li>
+                        <li>开启护眼</li>
+                        <li>多运动</li>
+                    </ul>
                 </div>
             </div>
         </div>
         
         <!-- P7 时间 -->
-        <div class="slide" data-index="6">
-            <div class="slide-hero">
-                <h2>使用<span class="accent">时长</span></h2>
-                <img class="img" src="https://images.unsplash.com/photo-1472162072942-cd5147eb3902?w=800" alt="户外" style="margin-bottom: clamp(30px, 6vw, 50px);">
-                <div class="timeline-4">
-                    <div class="time-item">
-                        <div class="age">3岁以下</div>
-                        <div class="hours">不建议</div>
-                        <div class="note">避免接触</div>
-                    </div>
-                    <div class="time-item">
-                        <div class="age">3-6岁</div>
-                        <div class="hours">≤30分钟</div>
-                        <div class="note">家长陪伴</div>
-                    </div>
-                    <div class="time-item">
-                        <div class="age">7-12岁</div>
-                        <div class="hours">≤1小时</div>
-                        <div class="note">分时段</div>
-                    </div>
-                    <div class="time-item">
-                        <div class="age">12岁以上</div>
-                        <div class="hours">≤1.5小时</div>
-                        <div class="note">学会自律</div>
-                    </div>
+        <div class="s" data-i="6">
+            <div class="time">
+                <div class="time-item">
+                    <div class="a">3岁以下</div>
+                    <div class="h">不建议</div>
+                    <div class="n">避免接触</div>
+                </div>
+                <div class="time-item">
+                    <div class="a">3-6岁</div>
+                    <div class="h">30分钟</div>
+                    <div class="n">家长陪伴</div>
+                </div>
+                <div class="time-item">
+                    <div class="a">7-12岁</div>
+                    <div class="h">1小时</div>
+                    <div class="n">分时段</div>
+                </div>
+                <div class="time-item">
+                    <div class="a">12岁以上</div>
+                    <div class="h">1.5小时</div>
+                    <div class="n">学会自律</div>
                 </div>
             </div>
         </div>
         
         <!-- P8 行动 -->
-        <div class="slide" data-index="7">
-            <div class="slide-hero">
-                <h2>本周<span class="accent">行动</span></h2>
-                <div class="action-row" style="margin-top: clamp(30px, 6vw, 50px);">
-                    <div class="item">
-                        <div class="num">1</div>
-                        <div class="text">制定规则并张贴</div>
-                    </div>
-                    <div class="item">
-                        <div class="num">2</div>
-                        <div class="text">设置家长控制</div>
-                    </div>
-                    <div class="item">
-                        <div class="num">3</div>
-                        <div class="text">约定无手机时间</div>
-                    </div>
-                    <div class="item">
-                        <div class="num">4</div>
-                        <div class="text">增加户外活动</div>
-                    </div>
+        <div class="s" data-i="7">
+            <div class="acts">
+                <div class="act">
+                    <div class="n">1</div>
+                    <div class="t">制定规则并张贴</div>
+                </div>
+                <div class="act">
+                    <div class="n">2</div>
+                    <div class="t">设置家长控制</div>
+                </div>
+                <div class="act">
+                    <div class="n">3</div>
+                    <div class="t">约定无手机时间</div>
+                </div>
+                <div class="act">
+                    <div class="n">4</div>
+                    <div class="t">增加户外活动</div>
                 </div>
             </div>
         </div>
         
         <!-- P9 总结 -->
-        <div class="slide slide-summary" data-index="8">
-            <div class="icon">🎯</div>
-            <h2>关键在<span class="highlight">引导</span></h2>
-            <div class="sub">让孩子做主人，非奴隶</div>
+        <div class="s end" data-i="8">
+            <div class="i">🎯</div>
+            <h2>关键在<span class="hl">引导</span></h2>
+            <div class="sub">做主人，非奴隶</div>
         </div>
         
-        <!-- 导航 -->
-        <div class="nav-dots" id="dots"></div>
-        <div class="progress-bar" id="bar"></div>
-        <div class="hint">左右滑动或方向键切换</div>
+        <div class="dots" id="dd"></div>
+        <div class="bar" id="bb"></div>
+        <div class="hint">滑动 / 方向键切换</div>
     </div>
 
     <script>
-        const slides = document.querySelectorAll('.slide');
-        const total = slides.length;
+        const ss = document.querySelectorAll('.s');
+        const total = ss.length;
         let cur = 0;
-        const dots = document.getElementById('dots');
-        const bar = document.getElementById('bar');
+        const dd = document.getElementById('dd');
+        const bb = document.getElementById('bb');
         
         for (let i = 0; i < total; i++) {
             const d = document.createElement('div');
-            d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+            d.className = 'dot' + (i === 0 ? ' active' : '');
             d.onclick = () => go(i);
-            dots.appendChild(d);
+            dd.appendChild(d);
         }
         
-        function upd() {
-            slides.forEach((s, i) => {
-                s.classList.remove('active', 'prev');
+        function up() {
+            ss.forEach((s, i) => {
+                s.classList.remove('active');
                 if (i === cur) s.classList.add('active');
-                else if (i < cur) s.classList.add('prev');
             });
-            document.querySelectorAll('.nav-dot').forEach((d, i) => d.classList.toggle('active', i === cur));
-            bar.style.width = ((cur + 1) / total * 100) + '%';
+            document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === cur));
+            bb.style.width = ((cur + 1) / total * 100) + '%';
         }
-        
-        function go(i) { cur = i; upd(); }
-        function nxt() { if (cur < total - 1) { cur++; upd(); } }
-        function prv() { if (cur > 0) { cur--; upd(); } }
+        function go(i) { cur = i; up(); }
+        function nxt() { if (cur < total - 1) { cur++; up(); } }
+        function prv() { if (cur > 0) { cur--; up(); } }
         
         document.addEventListener('keydown', e => {
             if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nxt(); }
             else if (e.key === 'ArrowLeft') prv();
         });
         
-        let tx = 0;
-        document.getElementById('p').addEventListener('touchstart', e => tx = e.touches[0].clientX);
-        document.getElementById('p').addEventListener('touchend', e => {
-            const te = e.changedTouches[0].clientX;
-            if (tx - te > 50) nxt();
-            else if (te - tx > 50) prv();
+        let sx = 0;
+        document.getElementById('pp').addEventListener('touchstart', e => sx = e.touches[0].clientX);
+        document.getElementById('pp').addEventListener('touchend', e => {
+            const ex = e.changedTouches[0].clientX;
+            if (sx - ex > 50) nxt();
+            else if (ex - sx > 50) prv();
         });
         
         let mx = 0, md = false;
-        document.getElementById('p').addEventListener('mousedown', e => { mx = e.clientX; md = true; });
-        document.getElementById('p').addEventListener('mouseup', e => {
+        document.getElementById('pp').addEventListener('mousedown', e => { mx = e.clientX; md = true; });
+        document.getElementById('pp').addEventListener('mouseup', e => {
             if (md && Math.abs(mx - e.clientX) > 80) (mx - e.clientX > 0 ? nxt : prv)();
             md = false;
         });
         
-        upd();
+        up();
     </script>
 </body>
 </html>
