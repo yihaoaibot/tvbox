@@ -3,101 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>小学生玩手机</title>
+    <title>小学生玩手机 - 专业版</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { width: 100%; height: 100%; overflow: hidden; font-family: -apple-system, sans-serif; background: #fff; }
+        html, body { width: 100%; height: 100%; overflow: hidden; font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
         .p { width: 100%; height: 100%; position: relative; overflow: hidden; }
-        .s { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: clamp(24px, 5vw, 50px); opacity: 0; transform: translateY(40px); transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); background: #fff; }
-        .s.active { opacity: 1; transform: translateY(0); }
+        
+        /* 幻灯片基础 */
+        .s { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; opacity: 0; transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1); background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); }
+        .s.active { opacity: 1; }
+        .s-content { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: clamp(30px, 6vw, 70px); position: relative; z-index: 2; }
+        
+        /* 高清背景图 */
+        .bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; opacity: 0.15; transition: opacity 0.5s; }
+        .s:hover .bg { opacity: 0.2; }
+        
+        /* 遮罩层 */
+        .mask { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%); z-index: 1; }
         
         /* 封面 */
-        .cover .ico { font-size: clamp(70px, 15vw, 140px); margin-bottom: 24px; }
-        .cover h1 { font-size: clamp(38px, 9vw, 88px); font-weight: 700; letter-spacing: -2px; margin-bottom: 16px; }
-        .cover .sub { font-size: clamp(18px, 4vw, 32px); color: #FF6700; font-weight: 600; }
+        .cover { justify-content: center; text-align: center; background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%); }
+        .cover .bg { opacity: 0; }
+        .cover .mask { opacity: 0; }
+        .cover .logo { width: clamp(80px, 16vw, 140px); height: clamp(80px, 16vw, 140px); background: rgba(255,255,255,0.2); border-radius: clamp(24px, 5vw, 40px); margin: 0 auto clamp(30px, 6vw, 50px); display: flex; align-items: center; justify-content: center; font-size: clamp(48px, 10vw, 88px); backdrop-filter: blur(10px); }
+        .cover h1 { font-size: clamp(40px, 10vw, 90px); font-weight: 800; color: #fff; letter-spacing: -2px; line-height: 1.1; margin-bottom: 20px; text-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        .cover .sub { font-size: clamp(18px, 4vw, 32px); color: rgba(255,255,255,0.9); font-weight: 500; }
         
-        /* 大数字 */
-        .nums { display: flex; gap: clamp(20px, 5vw, 60px); flex-wrap: wrap; justify-content: center; }
-        .num { text-align: center; min-width: clamp(150px, 25vw, 240px); }
-        .num .v { font-size: clamp(56px, 13vw, 120px); font-weight: 700; line-height: 1; }
-        .num .v.o { color: #FF6700; }
-        .num .v.r { color: #EA4335; }
-        .num .v.b { color: #1A73E8; }
-        .num .t { font-size: clamp(14px, 3vw, 22px); color: #666; margin-top: 12px; }
+        /* 页面标题区 */
+        .header { margin-bottom: clamp(30px, 6vw, 50px); position: relative; }
+        .header .page-num { font-size: clamp(14px, 3vw, 20px); color: #FF6B35; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+        .header .page-num::after { content: ''; width: clamp(30px, 6vw, 60px); height: 3px; background: linear-gradient(90deg, #FF6B35, transparent); border-radius: 2px; }
+        .header h2 { font-size: clamp(32px, 7vw, 64px); font-weight: 700; color: #1a1a1a; letter-spacing: -1px; line-height: 1.2; }
+        .header h2 .hl { color: #FF6B35; background: linear-gradient(135deg, #FF6B35, #F7931E); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        /* 图标网格 */
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(14px, 3vw, 28px); max-width: 900px; width: 100%; }
-        .g-item { background: #F5F5F7; border-radius: clamp(16px, 3.5vw, 32px); padding: clamp(20px, 4vw, 36px); text-align: center; transition: 0.3s; }
-        .g-item:hover { transform: scale(1.04); box-shadow: 0 16px 48px rgba(0,0,0,0.1); }
-        .g-item .i { font-size: clamp(48px, 10vw, 76px); margin-bottom: 12px; }
-        .g-item .t { font-size: clamp(16px, 3.5vw, 24px); font-weight: 600; }
-        .g-item.g .t { color: #34A853; }
-        .g-item.r .t { color: #EA4335; }
+        /* 大数据展示 */
+        .big-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(20px, 4vw, 40px); max-width: 1000px; margin: 0 auto; }
+        .big-stat { background: rgba(255,255,255,0.9); backdrop-filter: blur(20px); border-radius: clamp(20px, 4vw, 36px); padding: clamp(30px, 5vw, 50px); text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.08); border: 1px solid rgba(255,255,255,0.5); transition: 0.3s; }
+        .big-stat:hover { transform: translateY(-8px); box-shadow: 0 20px 60px rgba(0,0,0,0.12); }
+        .big-stat .val { font-size: clamp(48px, 11vw, 96px); font-weight: 800; line-height: 1; background: linear-gradient(135deg, #FF6B35, #F7931E); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .big-stat .label { font-size: clamp(14px, 3vw, 20px); color: #666; margin-top: 12px; font-weight: 500; }
         
-        /* 对比 */
-        .comp { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 4vw, 50px); max-width: 1000px; width: 100%; }
-        .c-card { background: linear-gradient(135deg, #F5F5F7, #fff); border-radius: clamp(20px, 4vw, 40px); padding: clamp(28px, 5vw, 50px); text-align: center; border: 4px solid; }
-        .c-card.bad { border-color: #EA4335; }
-        .c-card.good { border-color: #34A853; }
-        .c-card .i { font-size: clamp(52px, 11vw, 88px); margin-bottom: 16px; }
-        .c-card .h { font-size: clamp(20px, 4.5vw, 32px); font-weight: 600; margin-bottom: 20px; }
-        .c-card.bad .h { color: #EA4335; }
-        .c-card.good .h { color: #34A853; }
-        .c-card .case { background: #fff; border-radius: clamp(14px, 3vw, 24px); padding: clamp(16px, 3vw, 28px); text-align: left; margin-top: 12px; }
-        .c-card .case .n { font-size: clamp(14px, 3vw, 18px); font-weight: 600; margin-bottom: 6px; }
-        .c-card .case .d { font-size: clamp(12px, 2.5vw, 15px); color: #666; }
+        /* 4宫格卡片 */
+        .card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(16px, 3.5vw, 32px); max-width: 1000px; margin: 0 auto; }
+        .c-card { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius: clamp(20px, 4vw, 36px); padding: clamp(28px, 5vw, 44px); text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.06); border: 1px solid rgba(255,255,255,0.8); transition: all 0.4s; position: relative; overflow: hidden; }
+        .c-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; }
+        .c-card.green::before { background: linear-gradient(90deg, #34A853, #67BB6A); }
+        .c-card.red::before { background: linear-gradient(90deg, #EA4335, #F66866); }
+        .c-card:hover { transform: translateY(-10px); box-shadow: 0 20px 60px rgba(0,0,0,0.12); }
+        .c-card .icon { font-size: clamp(48px, 10vw, 72px); margin-bottom: 16px; }
+        .c-card h3 { font-size: clamp(20px, 4.5vw, 30px); font-weight: 700; margin-bottom: 16px; }
+        .c-card.green h3 { color: #34A853; }
+        .c-card.red h3 { color: #EA4335; }
+        .c-card ul { list-style: none; }
+        .c-card li { font-size: clamp(14px, 3vw, 18px); color: #555; padding: 8px 0; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .c-card li::before { content: '→'; color: #FF6B35; font-weight: bold; }
         
-        /* 3列 */
-        .col3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(14px, 3vw, 28px); max-width: 1000px; width: 100%; }
-        .col-card { background: #fff; border-radius: clamp(16px, 3.5vw, 32px); padding: clamp(24px, 4vw, 40px); text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.06); transition: 0.3s; }
-        .col-card:hover { transform: translateY(-12px); box-shadow: 0 16px 48px rgba(0,0,0,0.12); }
-        .col-card .i { font-size: clamp(52px, 11vw, 80px); margin-bottom: 16px; }
-        .col-card .h { font-size: clamp(18px, 4vw, 26px); font-weight: 600; color: #FF6700; margin-bottom: 20px; }
-        .col-card .l { list-style: none; text-align: left; }
-        .col-card .l li { font-size: clamp(13px, 3vw, 17px); padding: 8px 0; color: #444; padding-left: 22px; position: relative; }
-        .col-card .l li::before { content: '✓'; position: absolute; left: 0; color: #34A853; }
+        /* 对比案例区 */
+        .case-comp { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 5vw, 50px); max-width: 1100px; margin: 0 auto; }
+        .case-box { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius: clamp(24px, 5vw, 44px); padding: clamp(32px, 6vw, 56px); box-shadow: 0 12px 48px rgba(0,0,0,0.08); border: 2px solid; }
+        .case-box.bad { border-color: #EA4335; }
+        .case-box.good { border-color: #34A853; }
+        .case-box .title { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+        .case-box .title .icon { font-size: clamp(48px, 10vw, 72px); }
+        .case-box .title h3 { font-size: clamp(22px, 5vw, 34px); font-weight: 700; }
+        .case-box.bad .title h3 { color: #EA4335; }
+        .case-box.good .title h3 { color: #34A853; }
+        .case-box .case-item { background: #F8F9FA; border-radius: clamp(14px, 3vw, 24px); padding: clamp(18px, 4vw, 28px); margin-bottom: 12px; }
+        .case-box .case-item:last-child { margin-bottom: 0; }
+        .case-box .case-item h4 { font-size: clamp(15px, 3.5vw, 20px); margin-bottom: 8px; }
+        .case-box .case-item p { font-size: clamp(13px, 3vw, 16px); color: #666; }
+        .case-box .case-item .tag { display: inline-block; margin-top: 10px; padding: 6px 14px; background: rgba(234,67,53,0.1); border-radius: 20px; font-size: clamp(12px, 2.5vw, 14px); color: #EA4335; }
+        .case-box.good .case-item .tag { background: rgba(52,168,83,0.1); color: #34A853; }
+        
+        /* 三列引导 */
+        .guide-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(20px, 4vw, 36px); max-width: 1100px; margin: 0 auto; }
+        .guide-card { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius: clamp(24px, 5vw, 40px); padding: clamp(32px, 5vw, 48px) clamp(24px, 4vw, 36px); text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.06); transition: 0.4s; }
+        .guide-card:hover { transform: translateY(-12px); box-shadow: 0 20px 60px rgba(0,0,0,0.12); }
+        .guide-card .icon { font-size: clamp(52px, 11vw, 80px); margin-bottom: 20px; }
+        .guide-card h3 { font-size: clamp(20px, 4.5vw, 28px); font-weight: 700; color: #FF6B35; margin-bottom: 24px; }
+        .guide-card ul { list-style: none; text-align: left; }
+        .guide-card li { font-size: clamp(14px, 3vw, 18px); color: #444; padding: 12px 0; border-bottom: 1px solid #f0f0f0; padding-left: 28px; position: relative; }
+        .guide-card li:last-child { border-bottom: none; }
+        .guide-card li::before { content: '✓'; position: absolute; left: 0; color: #34A853; font-weight: bold; font-size: 1.2em; }
         
         /* 时间线 */
-        .time { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(24px, 5vw, 60px); max-width: 1000px; }
-        .time-item { text-align: center; min-width: clamp(140px, 22vw, 200px); }
-        .time-item .a { font-size: clamp(14px, 3vw, 18px); color: #999; margin-bottom: 6px; }
-        .time-item .h { font-size: clamp(28px, 6vw, 48px); font-weight: 700; color: #34A853; }
-        .time-item .n { font-size: clamp(12px, 2.5vw, 16px); color: #666; margin-top: 6px; }
+        .time-line { display: flex; justify-content: center; gap: clamp(20px, 4vw, 50px); flex-wrap: wrap; max-width: 1200px; margin: 0 auto; }
+        .time-item { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius: clamp(20px, 4vw, 36px); padding: clamp(28px, 5vw, 44px) clamp(24px, 4vw, 36px); text-align: center; min-width: clamp(160px, 24vw, 240px); box-shadow: 0 8px 32px rgba(0,0,0,0.06); transition: 0.3s; }
+        .time-item:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(0,0,0,0.1); }
+        .time-item .age { font-size: clamp(14px, 3vw, 18px); color: #999; font-weight: 500; margin-bottom: 10px; }
+        .time-item .hours { font-size: clamp(28px, 6vw, 48px); font-weight: 800; color: #34A853; background: linear-gradient(135deg, #34A853, #67BB6A); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .time-item .note { font-size: clamp(12px, 2.5vw, 16px); color: #666; margin-top: 10px; }
         
-        /* 行动 */
-        .acts { display: flex; flex-direction: column; gap: clamp(14px, 3vw, 24px); max-width: 700px; width: 100%; }
-        .act { display: flex; align-items: center; gap: clamp(16px, 3.5vw, 28px); padding: clamp(20px, 4vw, 32px); background: #F5F5F7; border-radius: clamp(16px, 3.5vw, 28px); transition: 0.3s; }
-        .act:hover { background: #fff; box-shadow: 0 12px 40px rgba(0,0,0,0.1); transform: translateX(12px); }
-        .act .n { width: clamp(44px, 8vw, 64px); height: clamp(44px, 8vw, 64px); background: linear-gradient(135deg, #FF6700, #FF9A3C); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: clamp(18px, 4vw, 28px); font-weight: 700; flex-shrink: 0; }
-        .act .t { font-size: clamp(16px, 3.5vw, 24px); font-weight: 500; }
+        /* 行动列表 */
+        .action-list { display: flex; flex-direction: column; gap: clamp(16px, 3.5vw, 28px); max-width: 800px; margin: 0 auto; }
+        .action-item { display: flex; align-items: center; gap: clamp(20px, 4vw, 32px); background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius: clamp(18px, 4vw, 32px); padding: clamp(24px, 5vw, 38px); box-shadow: 0 8px 32px rgba(0,0,0,0.06); transition: 0.3s; }
+        .action-item:hover { transform: translateX(12px); box-shadow: 0 16px 48px rgba(0,0,0,0.1); }
+        .action-item .num { width: clamp(50px, 10vw, 72px); height: clamp(50px, 10vw, 72px); background: linear-gradient(135deg, #FF6B35, #F7931E); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: clamp(20px, 4.5vw, 32px); font-weight: 700; flex-shrink: 0; box-shadow: 0 6px 20px rgba(255,107,53,0.3); }
+        .action-item .text { font-size: clamp(17px, 4vw, 26px); font-weight: 600; color: #1a1a1a; }
         
-        /* 总结 */
-        .end .i { font-size: clamp(70px, 15vw, 120px); margin-bottom: 24px; }
-        .end h2 { font-size: clamp(36px, 9vw, 84px); font-weight: 700; letter-spacing: -1px; margin-bottom: 20px; }
-        .end .hl { color: #FF6700; }
-        .end .sub { font-size: clamp(22px, 5vw, 40px); color: #34A853; font-weight: 600; }
+        /* 总结页 */
+        .summary { text-align: center; }
+        .summary .icon { font-size: clamp(72px, 15vw, 120px); margin-bottom: 30px; }
+        .summary h2 { font-size: clamp(36px, 9vw, 80px); font-weight: 800; letter-spacing: -2px; line-height: 1.2; margin-bottom: 30px; }
+        .summary h2 .hl { color: #FF6B35; }
+        .summary .sub { font-size: clamp(24px, 5.5vw, 42px); font-weight: 700; background: linear-gradient(135deg, #34A853, #67BB6A); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
         /* 导航 */
-        .dots { position: fixed; right: clamp(12px, 2.5vw, 20px); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: clamp(10px, 2vw, 14px); z-index: 100; }
-        .dot { width: clamp(8px, 1.8vw, 12px); height: clamp(8px, 1.8vw, 12px); background: #ddd; border-radius: 50%; cursor: pointer; transition: 0.3s; }
-        .dot.active { background: #FF6700; transform: scale(1.3); }
-        .bar { position: fixed; bottom: 0; left: 0; height: 5px; background: linear-gradient(90deg, #FF6700, #FF9A3C); transition: width 0.4s; z-index: 100; }
-        .hint { position: fixed; bottom: clamp(16px, 3.5vw, 26px); left: 50%; transform: translateX(-50%); font-size: clamp(11px, 2vw, 14px); color: #999; animation: p 2s infinite; }
-        @keyframes p { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.8; } }
+        .nav-dots { position: fixed; right: clamp(14px, 3vw, 24px); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: clamp(10px, 2vw, 16px); z-index: 100; }
+        .nav-dot { width: clamp(10px, 2.2vw, 14px); height: clamp(10px, 2.2vw, 14px); background: rgba(0,0,0,0.15); border-radius: 50%; cursor: pointer; transition: 0.3s; }
+        .nav-dot.active { background: #FF6B35; transform: scale(1.3); box-shadow: 0 4px 12px rgba(255,107,53,0.4); }
+        .progress-bar { position: fixed; bottom: 0; left: 0; height: 5px; background: linear-gradient(90deg, #FF6B35, #F7931E); transition: width 0.4s; z-index: 100; }
+        .hint { position: fixed; bottom: clamp(18px, 4vw, 30px); left: 50%; transform: translateX(-50%); font-size: clamp(12px, 2.5vw, 16px); color: rgba(0,0,0,0.3); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
         
+        /* 响应式 */
         @media (max-width: 768px) {
-            .s { padding: 20px 16px; }
-            .grid { grid-template-columns: 1fr; }
-            .comp { grid-template-columns: 1fr; }
-            .col3 { grid-template-columns: 1fr; }
-            .dots { right: 10px; gap: 10px; }
+            .s-content { padding: 24px 20px; }
+            .big-stats { grid-template-columns: 1fr; gap: 16px; }
+            .card-grid { grid-template-columns: 1fr; }
+            .case-comp { grid-template-columns: 1fr; }
+            .guide-3 { grid-template-columns: 1fr; gap: 16px; }
+            .time-line { gap: 12px; }
+            .time-item { min-width: 140px; padding: 20px 16px; }
         }
         @media (max-height: 500px) and (orientation: landscape) {
-            .s { padding: 12px 24px; }
-            .nums { gap: 12px; }
-            .num { min-width: 100px; }
-            .grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
-            .col3 { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+            .s-content { padding: 15px 30px; }
+            .big-stats { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+            .card-grid { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+            .guide-3 { grid-template-columns: repeat(3, 1fr); gap: 12px; }
         }
     </style>
 </head>
@@ -105,94 +138,141 @@
     <div class="p" id="pp">
         <!-- P1 封面 -->
         <div class="s cover active" data-i="0">
-            <div class="ico">📱</div>
+            <div class="logo">👧</div>
             <h1>小学生玩手机</h1>
-            <div class="sub">好处与危害</div>
+            <div class="sub">好处与危害 · 专题培训</div>
         </div>
         
         <!-- P2 数据 -->
         <div class="s" data-i="1">
-            <div class="nums">
-                <div class="num">
-                    <div class="v o">>85%</div>
-                    <div class="t">小学生用手机</div>
+            <img class="bg" src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=1200" alt="">
+            <div class="mask"></div>
+            <div class="s-content">
+                <div class="header">
+                    <div class="page-num">01 / 数据真相</div>
+                    <h2>触目<span class="hl">惊心</span></h2>
                 </div>
-                <div class="num">
-                    <div class="v r">35%+</div>
-                    <div class="t">小学生近视</div>
-                </div>
-                <div class="num">
-                    <div class="v b">1.5-2h</div>
-                    <div class="t">日均使用</div>
+                <div class="big-stats">
+                    <div class="big-stat">
+                        <div class="val">>85%</div>
+                        <div class="label">小学生使用手机</div>
+                    </div>
+                    <div class="big-stat">
+                        <div class="val">35%+</div>
+                        <div class="label">小学生近视率</div>
+                    </div>
+                    <div class="big-stat">
+                        <div class="val">1.5-2h</div>
+                        <div class="label">日均使用时长</div>
+                    </div>
                 </div>
             </div>
         </div>
         
         <!-- P3 好处 -->
         <div class="s" data-i="2">
-            <div class="grid">
-                <div class="g-item g">
-                    <div class="i">📚</div>
-                    <div class="t">学习便利</div>
+            <img class="bg" src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1200" alt="">
+            <div class="mask"></div>
+            <div class="s-content">
+                <div class="header">
+                    <div class="page-num">02 / 正面价值</div>
+                    <h2>适度使用<span class="hl">有好处</span></h2>
                 </div>
-                <div class="g-item g">
-                    <div class="i">💬</div>
-                    <div class="t">社交沟通</div>
-                </div>
-                <div class="g-item g">
-                    <div class="i">🧠</div>
-                    <div class="t">认知发展</div>
-                </div>
-                <div class="g-item g">
-                    <div class="i">🎮</div>
-                    <div class="t">适度娱乐</div>
+                <div class="card-grid">
+                    <div class="c-card green">
+                        <div class="icon">📚</div>
+                        <h3>学习便利</h3>
+                        <ul><li>在线教育资源丰富</li><li>查资料快捷方便</li><li>视频教程易懂</li></ul>
+                    </div>
+                    <div class="c-card green">
+                        <div class="icon">💬</div>
+                        <h3>社交沟通</h3>
+                        <ul><li>与家人保持联系</li><li>学习协作技巧</li><li>拓展朋友圈</li></ul>
+                    </div>
+                    <div class="c-card green">
+                        <div class="icon">🧠</div>
+                        <h3>认知发展</h3>
+                        <ul><li>接触新鲜事物</li><li>培养科技素养</li><li>锻炼手眼协调</li></ul>
+                    </div>
+                    <div class="c-card green">
+                        <div class="icon">🎮</div>
+                        <h3>适度娱乐</h3>
+                        <ul><li>放松减压</li><li>培养兴趣</li><li>智力游戏</li></ul>
+                    </div>
                 </div>
             </div>
         </div>
         
         <!-- P4 危害 -->
         <div class="s" data-i="3">
-            <div class="grid">
-                <div class="g-item r">
-                    <div class="i">👁️</div>
-                    <div class="t">视力损伤</div>
+            <img class="bg" src="https://images.unsplash.com/photo-1595867366996-8b5b2506d158?w=1200" alt="">
+            <div class="mask"></div>
+            <div class="s-content">
+                <div class="header">
+                    <div class="page-num">03 / 风险警示</div>
+                    <h2>更需<span class="hl">警惕</span></h2>
                 </div>
-                <div class="g-item r">
-                    <div class="i">📉</div>
-                    <div class="t">影响学习</div>
-                </div>
-                <div class="g-item r">
-                    <div class="i">🏃</div>
-                    <div class="t">运动减少</div>
-                </div>
-                <div class="g-item r">
-                    <div class="i">🧠</div>
-                    <div class="t">心理健康</div>
+                <div class="card-grid">
+                    <div class="c-card red">
+                        <div class="icon">👁️</div>
+                        <h3>视力损伤</h3>
+                        <ul><li>近视率持续上升</li><li>眼睛疲劳干涩</li><li>蓝光伤害视网膜</li></ul>
+                    </div>
+                    <div class="c-card red">
+                        <div class="icon">📉</div>
+                        <h3>影响学习</h3>
+                        <ul><li>注意力下降</li><li>作业质量降低</li><li>睡眠不足</li></ul>
+                    </div>
+                    <div class="c-card red">
+                        <div class="icon">🏃</div>
+                        <h3>运动减少</h3>
+                        <ul><li>体质明显下降</li><li>肥胖风险增加</li><li>协调性变差</li></ul>
+                    </div>
+                    <div class="c-card red">
+                        <div class="icon">🧠</div>
+                        <h3>心理健康</h3>
+                        <ul><li>社交能力退缩</li><li>情绪问题增多</li><li>成瘾倾向</li></ul>
+                    </div>
                 </div>
             </div>
         </div>
         
         <!-- P5 案例 -->
         <div class="s" data-i="4">
-            <div class="comp">
-                <div class="c-card bad">
-                    <div class="i">⚠️</div>
-                    <div class="h">反面</div>
-                    <div class="case">
-                        <div class="n">小明 - 三年级</div>
-                        <div class="d">3h手机 → 近视300度</div>
-                    </div>
-                    <div class="case" style="margin-top: 10px;">
-                        <div class="n">小红 - 四年级</div>
-                        <div class="d">沉迷短视频，成绩下滑</div>
-                    </div>
+            <img class="bg" src="https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1200" alt="">
+            <div class="mask"></div>
+            <div class="s-content">
+                <div class="header">
+                    <div class="page-num">04 / 真实案例</div>
+                    <h2>前车之<span class="hl">鉴</span></h2>
                 </div>
-                <div class="c-card good">
-                    <div class="i">✅</div>
-                    <div class="h">正面</div>
-                    <div class="case">
-                        <div class="n">小刚 - 五年级</div>
-                        <div class="d">30min学习APP，成绩提升</div>
+                <div class="case-comp">
+                    <div class="case-box bad">
+                        <div class="title">
+                            <div class="icon">⚠️</div>
+                            <h3>反面警示</h3>
+                        </div>
+                        <div class="case-item">
+                            <h4>小明 · 三年级</h4>
+                            <p>每天3小时手机 → 半年近视300度</p>
+                            <span class="tag">近视警示</span>
+                        </div>
+                        <div class="case-item">
+                            <h4>小红 · 四年级</h4>
+                            <p>沉迷短视频 → 成绩下滑30名</p>
+                            <span class="tag">成绩警示</span>
+                        </div>
+                    </div>
+                    <div class="case-box good">
+                        <div class="title">
+                            <div class="icon">✅</div>
+                            <h3>正面示范</h3>
+                        </div>
+                        <div class="case-item">
+                            <h4>小刚 · 五年级</h4>
+                            <p>30分钟学习APP → 成绩稳步提升</p>
+                            <span class="tag">正面示范</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -200,94 +280,94 @@
         
         <!-- P6 引导 -->
         <div class="s" data-i="5">
-            <div class="col3">
-                <div class="col-card">
-                    <div class="i">👨‍👩‍👧</div>
-                    <div class="h">家长</div>
-                    <ul class="l">
-                        <li>制定规则</li>
-                        <li>控制软件</li>
-                        <li>以身作则</li>
-                    </ul>
+            <img class="bg" src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1200" alt="">
+            <div class="mask"></div>
+            <div class="s-content">
+                <div class="header">
+                    <div class="page-num">05 / 解决方案</div>
+                    <h2>如何<span class="hl">引导</span></h2>
                 </div>
-                <div class="col-card">
-                    <div class="i">🏫</div>
-                    <div class="h">学校</div>
-                    <ul class="l">
-                        <li>安全教育</li>
-                        <li>无手机课</li>
-                        <li>课外活动</li>
-                    </ul>
-                </div>
-                <div class="col-card">
-                    <div class="i">📚</div>
-                    <div class="h">学生</div>
-                    <ul class="l">
-                        <li>遵守约定</li>
-                        <li>开启护眼</li>
-                        <li>多运动</li>
-                    </ul>
+                <div class="guide-3">
+                    <div class="guide-card">
+                        <div class="icon">👨‍👩‍👧</div>
+                        <h3>家长</h3>
+                        <ul><li>制定使用规则</li><li>安装控制软件</li><li>以身作则</li><li>高质量陪伴</li></ul>
+                    </div>
+                    <div class="guide-card">
+                        <div class="icon">🏫</div>
+                        <h3>学校</h3>
+                        <ul><li>安全教育</li><li>无手机课堂</li><li>课外活动</li><li>家校联动</li></ul>
+                    </div>
+                    <div class="guide-card">
+                        <div class="icon">📚</div>
+                        <h3>学生</h3>
+                        <ul><li>遵守约定</li><li>开启护眼</li><li>卸载无关</li><li>多运动</li></ul>
+                    </div>
                 </div>
             </div>
         </div>
         
         <!-- P7 时间 -->
         <div class="s" data-i="6">
-            <div class="time">
-                <div class="time-item">
-                    <div class="a">3岁以下</div>
-                    <div class="h">不建议</div>
-                    <div class="n">避免接触</div>
+            <img class="bg" src="https://images.unsplash.com/photo-1472162072942-cd5147eb3902?w=1200" alt="">
+            <div class="mask"></div>
+            <div class="s-content">
+                <div class="header">
+                    <div class="page-num">06 / 使用建议</div>
+                    <h2>合理<span class="hl">时长</span></h2>
                 </div>
-                <div class="time-item">
-                    <div class="a">3-6岁</div>
-                    <div class="h">30分钟</div>
-                    <div class="n">家长陪伴</div>
-                </div>
-                <div class="time-item">
-                    <div class="a">7-12岁</div>
-                    <div class="h">1小时</div>
-                    <div class="n">分时段</div>
-                </div>
-                <div class="time-item">
-                    <div class="a">12岁以上</div>
-                    <div class="h">1.5小时</div>
-                    <div class="n">学会自律</div>
+                <div class="time-line">
+                    <div class="time-item">
+                        <div class="age">3岁以下</div>
+                        <div class="hours">不建议</div>
+                        <div class="note">避免接触</div>
+                    </div>
+                    <div class="time-item">
+                        <div class="age">3-6岁</div>
+                        <div class="hours">≤30分钟</div>
+                        <div class="note">家长陪伴</div>
+                    </div>
+                    <div class="time-item">
+                        <div class="age">7-12岁</div>
+                        <div class="hours">≤1小时</div>
+                        <div class="note">分时段</div>
+                    </div>
+                    <div class="time-item">
+                        <div class="age">12岁以上</div>
+                        <div class="hours">≤1.5小时</div>
+                        <div class="note">学会自律</div>
+                    </div>
                 </div>
             </div>
         </div>
         
         <!-- P8 行动 -->
         <div class="s" data-i="7">
-            <div class="acts">
-                <div class="act">
-                    <div class="n">1</div>
-                    <div class="t">制定规则并张贴</div>
+            <img class="bg" src="https://images.unsplash.com/photo-1520033967690-f4dc4ac25f14?w=1200" alt="">
+            <div class="mask"></div>
+            <div class="s-content">
+                <div class="header">
+                    <div class="page-num">07 / 立即行动</div>
+                    <h2>本周<span class="hl">计划</span></h2>
                 </div>
-                <div class="act">
-                    <div class="n">2</div>
-                    <div class="t">设置家长控制</div>
-                </div>
-                <div class="act">
-                    <div class="n">3</div>
-                    <div class="t">约定无手机时间</div>
-                </div>
-                <div class="act">
-                    <div class="n">4</div>
-                    <div class="t">增加户外活动</div>
+                <div class="action-list">
+                    <div class="action-item"><div class="num">1</div><div class="text">制定规则并张贴</div></div>
+                    <div class="action-item"><div class="num">2</div><div class="text">设置家长控制</div></div>
+                    <div class="action-item"><div class="num">3</div><div class="text">约定无手机时间</div></div>
+                    <div class="action-item"><div class="num">4</div><div class="text">增加户外活动</div></div>
                 </div>
             </div>
         </div>
         
         <!-- P9 总结 -->
-        <div class="s end" data-i="8">
-            <div class="i">🎯</div>
+        <div class="s summary" data-i="8">
+            <div class="icon">🎯</div>
             <h2>关键在<span class="hl">引导</span></h2>
-            <div class="sub">做主人，非奴隶</div>
+            <div class="sub">让孩子做主人，非奴隶</div>
         </div>
         
-        <div class="dots" id="dd"></div>
-        <div class="bar" id="bb"></div>
+        <div class="nav-dots" id="dd"></div>
+        <div class="progress-bar" id="bb"></div>
         <div class="hint">滑动 / 方向键切换</div>
     </div>
 
@@ -306,10 +386,7 @@
         }
         
         function up() {
-            ss.forEach((s, i) => {
-                s.classList.remove('active');
-                if (i === cur) s.classList.add('active');
-            });
+            ss.forEach((s, i) => s.classList.toggle('active', i === cur));
             document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === cur));
             bb.style.width = ((cur + 1) / total * 100) + '%';
         }
